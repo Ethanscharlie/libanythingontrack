@@ -23,7 +23,10 @@ struct AOT_Tracker {
   size_t numberOfRecords;
 };
 
-static Datetime currentDate() { return *localtime(time(NULL)); }
+static Datetime currentDate() {
+  time_t t = time(NULL);
+  return *localtime(&t);
+}
 
 void AOT_Init() { srand(time(NULL)); }
 
@@ -87,11 +90,11 @@ uint8_t AOT_GetTrackerRecordDayAtIndex(AOT_Tracker* tracker, size_t index) {
 }
 
 uint8_t AOT_GetTrackerRecordMonthAtIndex(AOT_Tracker* tracker, size_t index) {
-  return tracker->records[index].date.tm_mon;
+  return tracker->records[index].date.tm_mon + 1;
 }
 
 uint16_t AOT_GetTrackerRecordYearAtIndex(AOT_Tracker* tracker, size_t index) {
-  return tracker->records[index].date.tm_yday;
+  return tracker->records[index].date.tm_year + 1900;
 }
 
 void AOT_SetTrackerRecordNoteAtIndex(AOT_Tracker* tracker, size_t index, char* note) {

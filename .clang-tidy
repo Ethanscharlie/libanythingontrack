@@ -1,0 +1,19 @@
+---
+Checks: >
+  -*,
+  bugprone-*,
+  clang-analyzer-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-uppercase-literal-suffix,
+  readability-inconsistent-declaration-parameter-name
+
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+FormatStyle: none
+InheritParentConfig: true
+
+CheckOptions:
+  - key: bugprone-argument-comment.StrictConversions
+    value: true
