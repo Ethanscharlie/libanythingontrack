@@ -7,7 +7,15 @@
 typedef enum { AOT_PERIOD_DAILY, AOT_PERIOD_WEEKLY, AOT_PERIOD_MONTHLY, AOT_PERIOD_YEARLY } AOT_Period;
 
 typedef struct AOT_Tracker AOT_Tracker;
-typedef struct tm Datetime;
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// AOT  ////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ *
+ */
+void AOT_Init();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // TRACKER /////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +34,7 @@ AOT_Tracker* AOT_CreateTrackerFromFile(char* filepath);
 /**
  *
  */
-AOT_Tracker* AOT_DestroyTracker(AOT_Tracker* tracker);
+void AOT_DestroyTracker(AOT_Tracker* tracker);
 
 /**
  *
@@ -70,7 +78,7 @@ void AOT_SetTrackerPeriodCount(AOT_Tracker* tracker, uint16_t periodCount);
 /**
  *
  */
-void AOT_TrackerAddRecord(AOT_Tracker* tracker, char* name, float value);
+void AOT_TrackerAddRecord(AOT_Tracker* tracker, char* note, float value);
 
 /**
  *
@@ -95,7 +103,17 @@ float AOT_GetTrackerRecordValueAtIndex(AOT_Tracker* tracker, size_t index);
 /**
  *
  */
-Datetime AOT_GetTrackerRecordDateAtIndex(AOT_Tracker* tracker, size_t index);
+uint8_t AOT_GetTrackerRecordDayAtIndex(AOT_Tracker* tracker, size_t index);
+
+/**
+ *
+ */
+uint8_t AOT_GetTrackerRecordMonthAtIndex(AOT_Tracker* tracker, size_t index);
+
+/**
+ *
+ */
+uint16_t AOT_GetTrackerRecordYearAtIndex(AOT_Tracker* tracker, size_t index);
 
 /**
  *
@@ -106,8 +124,3 @@ void AOT_SetTrackerRecordNoteAtIndex(AOT_Tracker* tracker, size_t index, char* n
  *
  */
 void AOT_SetTrackerRecordValueAtIndex(AOT_Tracker* tracker, size_t index, float value);
-
-/**
- *
- */
-void AOT_SetTrackerRecordDateAtIndex(AOT_Tracker* tracker, size_t index, Datetime date);

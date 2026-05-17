@@ -1,21 +1,56 @@
 #include "aot.h"
 
+#include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef struct tm Datetime;
+
+typedef struct {
+  char* note;
+  Datetime date;
+  float value;
+} AOT_Record;
 
 struct AOT_Tracker {
   uint32_t id;
   char* name;
   AOT_Period period;
   uint16_t periodCount;
+  Datetime date;
+  AOT_Record* records;
+  size_t numberOfRecords;
 };
 
-AOT_Tracker* AOT_CreateTracker(char* name, AOT_Period period, uint16_t periodCount) {}
+static Datetime currentDate() { return *localtime(time(NULL)); }
 
-AOT_Tracker* AOT_CreateTrackerFromFile(char* filepath) {}
+void AOT_Init() { srand(time(NULL)); }
 
-AOT_Tracker* AOT_DestroyTracker(AOT_Tracker* tracker) {}
+AOT_Tracker* AOT_CreateTracker(char* name, AOT_Period period, uint16_t periodCount) {
+  AOT_Tracker* tracker = malloc(sizeof(AOT_Tracker));
 
-float AOT_GetTrackerBalance(AOT_Tracker* tracker) {}
+  tracker->id = 0;
+  tracker->name = name;
+  tracker->period = period;
+  tracker->periodCount = periodCount;
+  tracker->date = currentDate();
+
+  tracker->records = (AOT_Record*)malloc(sizeof(AOT_Record) * 0);
+  tracker->numberOfRecords = 0;
+
+  return tracker;
+}
+
+AOT_Tracker* AOT_CreateTrackerFromFile(char* filepath) {
+  // TODO
+}
+
+void AOT_DestroyTracker(AOT_Tracker* tracker) { free(tracker); }
+
+float AOT_GetTrackerBalance(AOT_Tracker* tracker) {
+  // TODO
+}
 
 char* AOT_GetTrackerName(AOT_Tracker* tracker) { return tracker->name; }
 
@@ -29,20 +64,40 @@ void AOT_SetTrackerPeriod(AOT_Tracker* tracker, AOT_Period period) { tracker->pe
 
 void AOT_SetTrackerPeriodCount(AOT_Tracker* tracker, uint16_t periodCount) { tracker->periodCount = periodCount; }
 
-void AOT_TrackerAddRecord(AOT_Tracker* tracker, char* name, float value) {}
+void AOT_TrackerAddRecord(AOT_Tracker* tracker, char* note, float value) {
+  tracker->numberOfRecords++;
+  tracker->records = realloc(tracker->records, tracker->numberOfRecords * sizeof(AOT_Record));
 
-size_t AOT_GetTrackerRecordCount(AOT_Tracker* tracker) {}
+  AOT_Record record = {note, currentDate(), value};
+  tracker->records[tracker->numberOfRecords - 1] = record;
+}
 
-void AOT_TrackerRemoveRecordAtIndex(AOT_Tracker* tracker, size_t index) {}
+size_t AOT_GetTrackerRecordCount(AOT_Tracker* tracker) { return tracker->numberOfRecords; }
 
-char* AOT_GetTrackerRecordNoteAtIndex(AOT_Tracker* tracker, size_t index) {}
+void AOT_TrackerRemoveRecordAtIndex(AOT_Tracker* tracker, size_t index) {
+  // TODO
+}
 
-float AOT_GetTrackerRecordValueAtIndex(AOT_Tracker* tracker, size_t index) {}
+char* AOT_GetTrackerRecordNoteAtIndex(AOT_Tracker* tracker, size_t index) { return tracker->records[index].note; }
 
-Datetime AOT_GetTrackerRecordDateAtIndex(AOT_Tracker* tracker, size_t index) {}
+float AOT_GetTrackerRecordValueAtIndex(AOT_Tracker* tracker, size_t index) { return tracker->records[index].value; }
 
-void AOT_SetTrackerRecordNoteAtIndex(AOT_Tracker* tracker, size_t index, char* note) {}
+uint8_t AOT_GetTrackerRecordDayAtIndex(AOT_Tracker* tracker, size_t index) {
+  return tracker->records[index].date.tm_mday;
+}
 
-void AOT_SetTrackerRecordValueAtIndex(AOT_Tracker* tracker, size_t index, float value) {}
+uint8_t AOT_GetTrackerRecordMonthAtIndex(AOT_Tracker* tracker, size_t index) {
+  return tracker->records[index].date.tm_mon;
+}
 
-void AOT_SetTrackerRecordDateAtIndex(AOT_Tracker* tracker, size_t index, Datetime date) {}
+uint16_t AOT_GetTrackerRecordYearAtIndex(AOT_Tracker* tracker, size_t index) {
+  return tracker->records[index].date.tm_yday;
+}
+
+void AOT_SetTrackerRecordNoteAtIndex(AOT_Tracker* tracker, size_t index, char* note) {
+  tracker->records[index].note = note;
+}
+
+void AOT_SetTrackerRecordValueAtIndex(AOT_Tracker* tracker, size_t index, float value) {
+  tracker->records[index].value = value;
+}
