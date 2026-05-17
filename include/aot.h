@@ -64,6 +64,21 @@ uint16_t AOT_GetTrackerPeriodCount(AOT_Tracker* tracker);
 /**
  *
  */
+int AOT_GetTrackerDay(AOT_Tracker* tracker);
+
+/**
+ *
+ */
+int AOT_GetTrackerMonth(AOT_Tracker* tracker);
+
+/**
+ *
+ */
+int AOT_GetTrackerYear(AOT_Tracker* tracker);
+
+/**
+ *
+ */
 void AOT_SetTrackerName(AOT_Tracker* tracker, char* name);
 
 /**
@@ -80,6 +95,21 @@ void AOT_SetTrackerPeriod(AOT_Tracker* tracker, AOT_Period period);
  *
  */
 void AOT_SetTrackerPeriodCount(AOT_Tracker* tracker, uint16_t periodCount);
+
+/**
+ *
+ */
+void AOT_SetTrackerDay(AOT_Tracker* tracker, int day);
+
+/**
+ *
+ */
+void AOT_SetTrackerMonth(AOT_Tracker* tracker, int month);
+
+/**
+ *
+ */
+void AOT_SetTrackerYear(AOT_Tracker* tracker, int year);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // RECORDS /////////////////////////////////////////////////////////////////////////////////////

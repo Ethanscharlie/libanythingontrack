@@ -112,6 +112,12 @@ AOT_Period AOT_GetTrackerPeriod(AOT_Tracker* tracker) { return tracker->period; 
 
 uint16_t AOT_GetTrackerPeriodCount(AOT_Tracker* tracker) { return tracker->periodCount; }
 
+int AOT_GetTrackerDay(AOT_Tracker* tracker) { return tracker->date.tm_mday; }
+
+int AOT_GetTrackerMonth(AOT_Tracker* tracker) { return tracker->date.tm_mon + 1; }
+
+int AOT_GetTrackerYear(AOT_Tracker* tracker) { return tracker->date.tm_year + 1900; }
+
 void AOT_SetTrackerName(AOT_Tracker* tracker, char* name) { tracker->name = name; }
 
 void AOT_SetTrackerValue(AOT_Tracker* tracker, float value) { tracker->value = value; }
@@ -119,6 +125,21 @@ void AOT_SetTrackerValue(AOT_Tracker* tracker, float value) { tracker->value = v
 void AOT_SetTrackerPeriod(AOT_Tracker* tracker, AOT_Period period) { tracker->period = period; }
 
 void AOT_SetTrackerPeriodCount(AOT_Tracker* tracker, uint16_t periodCount) { tracker->periodCount = periodCount; }
+
+void AOT_SetTrackerDay(AOT_Tracker* tracker, int day) {
+  tracker->date.tm_mday = day;
+  mktime(&tracker->date);
+}
+
+void AOT_SetTrackerMonth(AOT_Tracker* tracker, int month) {
+  tracker->date.tm_mon = month - 1;
+  mktime(&tracker->date);
+}
+
+void AOT_SetTrackerYear(AOT_Tracker* tracker, int year) {
+  tracker->date.tm_year = year - 1900;
+  mktime(&tracker->date);
+}
 
 void AOT_TrackerAddRecord(AOT_Tracker* tracker, char* note, float value) {
   tracker->numberOfRecords++;
