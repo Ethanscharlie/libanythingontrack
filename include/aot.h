@@ -24,7 +24,7 @@ void AOT_Init();
 /**
  *
  */
-AOT_Tracker* AOT_CreateTracker(char* name, AOT_Period period, uint16_t periodCount);
+AOT_Tracker* AOT_CreateTracker(char* name, float value, AOT_Period period, uint16_t periodCount);
 
 /**
  *
@@ -49,6 +49,11 @@ char* AOT_GetTrackerName(AOT_Tracker* tracker);
 /**
  *
  */
+float AOT_GetTrackerValue(AOT_Tracker* tracker);
+
+/**
+ *
+ */
 AOT_Period AOT_GetTrackerPeriod(AOT_Tracker* tracker);
 
 /**
@@ -60,6 +65,11 @@ uint16_t AOT_GetTrackerPeriodCount(AOT_Tracker* tracker);
  *
  */
 void AOT_SetTrackerName(AOT_Tracker* tracker, char* name);
+
+/**
+ *
+ */
+void AOT_SetTrackerValue(AOT_Tracker* tracker, float value);
 
 /**
  *

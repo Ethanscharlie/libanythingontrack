@@ -5,6 +5,12 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define SECONDS_IN_HOUR 3600.0
+#define HOURS_IN_DAY 24.0
+#define HOURS_IN_WEEK HOURS_IN_DAY * 7
+#define HOURS_IN_YEAR HOURS_IN_DAY * 365.0
+#define HOURS_IN_MONTH HOURS_IN_YEAR / 12.0
+
 typedef struct tm Datetime;
 
 typedef struct {
@@ -16,6 +22,7 @@ typedef struct {
 struct AOT_Tracker {
   uint32_t id;
   char* name;
+  float value;
   AOT_Period period;
   uint16_t periodCount;
   Datetime date;
@@ -30,13 +37,14 @@ static Datetime currentDate() {
 
 void AOT_Init() { srand(time(NULL)); }
 
-AOT_Tracker* AOT_CreateTracker(char* name, AOT_Period period, uint16_t periodCount) {
+AOT_Tracker* AOT_CreateTracker(char* name, float value, AOT_Period period, uint16_t periodCount) {
   AOT_Tracker* tracker = malloc(sizeof(AOT_Tracker));
 
   tracker->id = 0;
   tracker->name = name;
   tracker->period = period;
   tracker->periodCount = periodCount;
+  tracker->value = value;
   tracker->date = currentDate();
 
   tracker->records = (AOT_Record*)malloc(sizeof(AOT_Record) * 0);
@@ -51,17 +59,62 @@ AOT_Tracker* AOT_CreateTrackerFromFile(char* filepath) {
 
 void AOT_DestroyTracker(AOT_Tracker* tracker) { free(tracker); }
 
+static float GetTrackerRecordValueTotal(AOT_Tracker* tracker) {
+  float value = 0.0F;
+
+  for (size_t i = 0; i < tracker->numberOfRecords; i++) {
+    value += tracker->records[i].value;
+  }
+
+  return value;
+}
+
+static double getHoursInPeriod(AOT_Period period, uint16_t periodCount) {
+  double hours = 0;
+
+  switch (period) {
+    case AOT_PERIOD_DAILY:
+      hours = HOURS_IN_DAY;
+
+    case AOT_PERIOD_WEEKLY:
+      hours = HOURS_IN_WEEK;
+
+    case AOT_PERIOD_MONTHLY:
+      hours = HOURS_IN_MONTH;
+
+    case AOT_PERIOD_YEARLY:
+      hours = HOURS_IN_YEAR;
+  }
+
+  return hours * periodCount;
+}
+
+static double hoursElapsedFromDate(Datetime date) {
+  double secondsElapsed = difftime(time(NULL), mktime(&date));
+  return secondsElapsed / SECONDS_IN_HOUR;
+}
+
 float AOT_GetTrackerBalance(AOT_Tracker* tracker) {
-  // TODO
+  double hoursElapsed = hoursElapsedFromDate(tracker->date);
+  double hoursInPeriod = getHoursInPeriod(tracker->period, tracker->periodCount);
+  int periodsElapsed = (int)hoursElapsed % (int)hoursInPeriod;
+
+  float totalInPot = tracker->value * (float)(periodsElapsed + 1);
+  float totalSpent = GetTrackerRecordValueTotal(tracker);
+  return totalInPot - totalSpent;
 }
 
 char* AOT_GetTrackerName(AOT_Tracker* tracker) { return tracker->name; }
+
+float AOT_GetTrackerValue(AOT_Tracker* tracker) { return tracker->value; }
 
 AOT_Period AOT_GetTrackerPeriod(AOT_Tracker* tracker) { return tracker->period; }
 
 uint16_t AOT_GetTrackerPeriodCount(AOT_Tracker* tracker) { return tracker->periodCount; }
 
 void AOT_SetTrackerName(AOT_Tracker* tracker, char* name) { tracker->name = name; }
+
+void AOT_SetTrackerValue(AOT_Tracker* tracker, float value) { tracker->value = value; }
 
 void AOT_SetTrackerPeriod(AOT_Tracker* tracker, AOT_Period period) { tracker->period = period; }
 
