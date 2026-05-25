@@ -164,7 +164,5 @@ int main(int argc, char* argv[]) {
     return periodTypeTests(argv[2], period);
   }
 
-  // The following tests should be reapated for each 4 types of periods.
-
   return EXIT_FAILURE;
 }
